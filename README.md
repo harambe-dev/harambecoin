@@ -1,8 +1,9 @@
 HarambeCoin (HMBC)
 ==================
 
-A commemorative digital currency to honor the memory of Harambe. He was
-an outstanding monkey. More details to come soon.
+A commemorative digital currency to honor the memory of Harambe. 
+He was an outstanding monkey. 
+More details to come soon.
 
 
 Updates:
@@ -14,11 +15,11 @@ Updates:
 - DNS Seeds set to null; need to set up nodes for actual network
 - No genesis block created in this update for either network
 - Fix leveldb permissions so daemon compiles correctly on unix
+- Quick fix for client version so wallet doesn't incorrectly attempt downgrade
 
 
 To Do:
 ------
-- Seed testnet 
 - Update Icons
 - Test Qt compilation
 - Test windows compilation

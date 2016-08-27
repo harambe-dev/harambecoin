@@ -35,7 +35,7 @@ CTxMemPool mempool;
 unsigned int nTransactionsUpdated = 0;
 
 map<uint256, CBlockIndex*> mapBlockIndex;
-uint256 hashGenesisBlock("0x0");
+uint256 hashGenesisBlock("0x");
 static CBigNum bnProofOfWorkLimit(~uint256(0) >> 20); // Harambecoin: starting difficulty is 1 / 2^12; for now...
 CBlockIndex* pindexGenesisBlock = NULL;
 int nBestHeight = -1;
@@ -2751,7 +2751,7 @@ bool LoadBlockIndex()
         pchMessageStart[1] = 0xda;
         pchMessageStart[2] = 0xb4;
         pchMessageStart[3] = 0xd9;
-        hashGenesisBlock = uint256("0xf5ae71e26c74beacc88382716aced69cddf3dffff24f384e1808905e0188f68f");
+        hashGenesisBlock = uint256("0x6d3380d188cb522d6d78f377f9fecbd29b6084fc1b0bc750a236b574acb962da");
     }
 
     //
@@ -2776,12 +2776,25 @@ bool InitBlockIndex() {
 
     // Only add the genesis block if not reindexing (in which case we reuse the one already on disk)
     if (!fReindex) {
-        // Genesis Block:
+        // Genesis Block Playground:
+        // -------------------------
+        //
+        // Litecoin Genesis Block:
         // CBlock(hash=12a765e31ffd4059bada, PoW=0000050c34a64b415b6b, ver=1, hashPrevBlock=00000000000000000000, hashMerkleRoot=97ddfbbae6, nTime=1317972665, nBits=1e0ffff0, nNonce=2084524493, vtx=1)
         //   CTransaction(hash=97ddfbbae6, ver=1, vin.size=1, vout.size=1, nLockTime=0)
         //     CTxIn(COutPoint(0000000000, -1), coinbase 04ffff001d0104404e592054696d65732030352f4f63742f32303131205374657665204a6f62732c204170706c65e280997320566973696f6e6172792c2044696573206174203536)
         //     CTxOut(nValue=50.00000000, scriptPubKey=040184710fa689ad5023690c80f3a4)
         //   vMerkleTree: 97ddfbbae6
+
+        // Harambecoin Testnet Genesis Block:
+        // CBlock(hash=6d3380d188cb522d6d78f377f9fecbd29b6084fc1b0bc750a236b574acb962da, PoW=000009429f68475400dc614a97819ccbecad9a3f11a2b7cac12dbc902d508be1, ver=1,
+        // hashPrevBlock=0000000000000000000000000000000000000000000000000000000000000000, hashMerkleRoot=d5b7d14d2d2a75d97ce9f199a5bbd3677535ba74f8a9960ead78597f29c1a26c,
+        // nTime=1472317588, nBits=1e0ffff0, nNonce=480661, vtx=1)
+        //   CTransaction(hash=d5b7d14d2d2a75d97ce9f199a5bbd3677535ba74f8a9960ead78597f29c1a26c, ver=1, vin.size=1, vout.size=1, nLockTime=0)
+        //    CTxIn(COutPoint(0000000000000000000000000000000000000000000000000000000000000000, 4294967295),
+        //    coinbase 04ffff001d01044c4d4e592054696d65732033312f4d61792f32303136205a6f6fe2809973204b696c6c696e67206f6620476f72696c6c6120486f6c64696e67206120426f792050726f6d707473204f757472616765)
+        //    CTxOut(nValue=50.00000000, scriptPubKey=04aa26373c77c48a5160d06aa7a531)
+        //  vMerkleTree: d5b7d14d2d2a75d97ce9f199a5bbd3677535ba74f8a9960ead78597f29c1a26c
 
         // Genesis block
         const char* pszTimestamp = "NY Times 31/May/2016 Zoo’s Killing of Gorilla Holding a Boy Prompts Outrage";
@@ -2803,7 +2816,7 @@ bool InitBlockIndex() {
         if (fTestNet)
         {
             block.nTime    = 1472317588;
-            block.nNonce   = 0;
+            block.nNonce   = 480661;
         }
 
         //// debug print
@@ -2811,7 +2824,7 @@ bool InitBlockIndex() {
         printf("%s\n", hash.ToString().c_str());
         printf("%s\n", hashGenesisBlock.ToString().c_str());
         printf("%s\n", block.hashMerkleRoot.ToString().c_str());
-        assert(block.hashMerkleRoot == uint256("0x0"));
+        assert(block.hashMerkleRoot == uint256("0xd5b7d14d2d2a75d97ce9f199a5bbd3677535ba74f8a9960ead78597f29c1a26c"));
 
         // If genesis block hash does not match, then generate new genesis hash.
         if (true && block.GetHash() != hashGenesisBlock)
