@@ -6,11 +6,23 @@ an outstanding monkey. More details to come soon.
 
 
 Updates:
+--------
 - Source code updated to litecoin v0.8.x branch
 - Maturity currently set at 12 blocks, needs to be 120 (min) for real network
 - 1 billion coins max
 - uses boilerplate diff retarget and block rewards -> this needs major updates
 - DNS Seeds set to null; need to set up nodes for actual network
+- No genesis block created in this update for either network
+- Fix leveldb permissions so daemon compiles correctly on unix
+
+
+To Do:
+------
+- Seed testnet 
+- Update Icons
+- Test Qt compilation
+- Test windows compilation
+- much, much more...
 
 
 
