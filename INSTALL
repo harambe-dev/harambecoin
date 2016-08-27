@@ -1,0 +1,9 @@
+Building Harambecoin
+
+See doc/readme-qt.rst for instructions on building Harambecoin-Qt,
+the intended-for-end-users, nice-graphical-interface, reference
+implementation of Harambecoin.
+
+See doc/build-*.txt for instructions on building harambecoind,
+the intended-for-services, no-graphical-interface, reference
+implementation of Harambecoin.
