@@ -2827,7 +2827,7 @@ bool InitBlockIndex() {
         assert(block.hashMerkleRoot == uint256("0xd5b7d14d2d2a75d97ce9f199a5bbd3677535ba74f8a9960ead78597f29c1a26c"));
 
         // If genesis block hash does not match, then generate new genesis hash.
-        if (true && block.GetHash() != hashGenesisBlock)
+        if (false && block.GetHash() != hashGenesisBlock)
         {
             printf("Searching for genesis block...\n");
             // This will figure out a valid hash and Nonce if you're
