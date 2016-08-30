@@ -36,7 +36,7 @@ unsigned int nTransactionsUpdated = 0;
 
 map<uint256, CBlockIndex*> mapBlockIndex;
 uint256 hashGenesisBlock("0x");
-static CBigNum bnProofOfWorkLimit(~uint256(0) >> 20); // Harambecoin: starting difficulty is 1 / 2^12; for now...
+static CBigNum bnProofOfWorkLimit(~uint256(0) >> 20); // what does changing this affect? Numeric represenation of difficulty?
 CBlockIndex* pindexGenesisBlock = NULL;
 int nBestHeight = -1;
 uint256 nBestChainWork = 0;
@@ -1087,10 +1087,14 @@ uint256 static GetOrphanRoot(const CBlockHeader* pblock)
 
 int64 static GetBlockValue(int nHeight, int64 nFees)
 {
+    /*
+     * Harambecoin Block Value Depreciation
+    int64 nMonths >>= (nHeight / 22500);
+    float fExp = 8.0 - nMonths * 0.04;
+    */
+
     int64 nSubsidy = 100 * COIN;
 
-    // Harambecoin: this logic is going to get changed alongside the difficulty targetting
-    // leaving the litecoin defaults in since it's irrelevant for testing at the moment
 
     // Subsidy is cut in half every 840000 blocks, which will occur approximately every 4 years
     nSubsidy >>= (nHeight / 840000); // Litecoin: 840k blocks in ~4 years

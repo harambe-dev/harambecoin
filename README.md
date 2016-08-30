@@ -1,6 +1,5 @@
 HarambeCoin (HMBC)
 ==================
-
 A commemorative digital currency to honor the memory of Harambe. 
 He was an outstanding monkey. 
 More details to come soon.
@@ -16,14 +15,11 @@ Updates:
 - No genesis block created in this update for either network
 - Fix leveldb permissions so daemon compiles correctly on unix
 - Quick fix for client version so wallet doesn't incorrectly attempt downgrade
+- Moved 'To Do' to a seperate file
+- Windows Test Client compiled and running correctly
 
-
-To Do:
-------
-- Update Icons
-- Test Qt compilation
-- Test windows compilation
-- much, much more...
+> Once the next major update is complete, this readme will become more generic
+> and updates can be moved in to a release log of some fashion
 
 
 
