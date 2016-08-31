@@ -1,8 +1,9 @@
-Harambecoin 0.8.x BETA
-====================
+Harambecoin 0.8.x ALPHA
+=======================
 
 Copyright (c) 2009-2014 Bitcoin Developers
-Copyright (c) 2011-2014 Harambecoin Developers
+Copyright (c) 2011-2015 Litecoin Developers
+Copyright (c) 2016 Harambecoin Developers
 
 Distributed under the MIT/X11 software license, see the accompanying
 file COPYING or http://www.opensource.org/licenses/mit-license.php.

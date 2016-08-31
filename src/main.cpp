@@ -14,6 +14,7 @@
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
+#include <math.h>
 
 using namespace std;
 using namespace boost;
@@ -1087,25 +1088,19 @@ uint256 static GetOrphanRoot(const CBlockHeader* pblock)
 
 int64 static GetBlockValue(int nHeight, int64 nFees)
 {
-    /*
-     * Harambecoin Block Value Depreciation
-    int64 nMonths >>= (nHeight / 22500);
-    float fExp = 8.0 - nMonths * 0.04;
-    */
+    // Harambecoin Block Value depreciation
+    int nMonths >>= (nHeight / 29200); // expected number of blocks per month
+    double dParam = 8.0 - (nMonths * 0.04);
+    int64 nMultiplier = exp(dParam);
 
-    int64 nSubsidy = 100 * COIN;
-
-
-    // Subsidy is cut in half every 840000 blocks, which will occur approximately every 4 years
-    nSubsidy >>= (nHeight / 840000); // Litecoin: 840k blocks in ~4 years
+    int64 nSubsidy = nMultiplier * COIN; //hopefully this truncates decimals
 
     return nSubsidy + nFees;
 }
 
-// block time will likely remain at 1 minute however retarget logic needs to be overhauled before release
-// for testing purposes we'll use a 10 minute simple retarget period
-static const int64 nTargetTimespan = 10 * 60; // Harambecoin: 10 minute retarget period
-static const int64 nTargetSpacing = 1 * 60; // Harambecoin: 60 second blocks
+// for testing purposes we'll use a 6 minute, 4 block simple retarget period
+static const int64 nTargetTimespan = 4 * 1.5 * 60;
+static const int64 nTargetSpacing = 1.5 * 60; // Harambecoin: 90 second blocks
 static const int64 nInterval = nTargetTimespan / nTargetSpacing;
 
 //
