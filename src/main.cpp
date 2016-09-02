@@ -1089,7 +1089,7 @@ uint256 static GetOrphanRoot(const CBlockHeader* pblock)
 int64 static GetBlockValue(int nHeight, int64 nFees)
 {
     // Harambecoin Block Value depreciation
-    int nMonths >>= (nHeight / 29200); // expected number of blocks per month
+    int nMonths = (nHeight / 29200); // expected number of blocks per month
     double dParam = 8.0 - (nMonths * 0.04);
     int64 nMultiplier = exp(dParam);
 
