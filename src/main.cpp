@@ -1,5 +1,7 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin developers
+// Copyright (c) 2014-2016 Harambecoin Developers
+
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -1089,12 +1091,15 @@ uint256 static GetOrphanRoot(const CBlockHeader* pblock)
 int64 static GetBlockValue(int nHeight, int64 nFees)
 {
     // Harambecoin Block Value depreciation
-    int nMonths = (nHeight / 29200); // expected number of blocks per month
-    double dParam = 8.0 - (nMonths * 0.04);
-    int64 nMultiplier = exp(dParam);
+    // this value is for testing only -> actual blocks per month = 29200
+    int nMonths = (nHeight / 100); // expected number of blocks per month
 
-    int64 nSubsidy = nMultiplier * COIN; //hopefully this truncates decimals
+    // this calculates block reward truncated to two decimal points
+    double dParam = 4.5 - (nMonths * 0.01);
+    double dMultiplier = exp(dParam);
+    float fTruncatedMultiplier = floor(dMultiplier*100) / 100;
 
+    int64 nSubsidy = fTruncatedMultiplier * COIN;
     return nSubsidy + nFees;
 }
 
@@ -2750,7 +2755,7 @@ bool LoadBlockIndex()
         pchMessageStart[1] = 0xda;
         pchMessageStart[2] = 0xb4;
         pchMessageStart[3] = 0xd9;
-        hashGenesisBlock = uint256("0x6d3380d188cb522d6d78f377f9fecbd29b6084fc1b0bc750a236b574acb962da");
+        hashGenesisBlock = uint256("0xbe26469f6c2776dff890ecb6795bbfc5eb3b83003c543361b174f14ba7842e7f");
     }
 
     //
@@ -2795,6 +2800,14 @@ bool InitBlockIndex() {
         //    CTxOut(nValue=50.00000000, scriptPubKey=04aa26373c77c48a5160d06aa7a531)
         //  vMerkleTree: d5b7d14d2d2a75d97ce9f199a5bbd3677535ba74f8a9960ead78597f29c1a26c
 
+        // Testnet Genesis Block, Take 2:
+        // CBlock(hash=be26469f6c2776dff890ecb6795bbfc5eb3b83003c543361b174f14ba7842e7f, input=0100000000000000000000000000000000000000000000000000000000000000000000006ca2c1297f5978ad0e96a9f874ba357567d3bba599f1e97cd9752a2d4dd1b7d56e94cd57f0ff0f1e0e483300, PoW=00000b7956468ff817851499b21db2081d330654c493274d98f1a85e2ec4c21f, ver=1, hashPrevBlock=0000000000000000000000000000000000000000000000000000000000000000, hashMerkleRoot=d5b7d14d2d2a75d97ce9f199a5bbd3677535ba74f8a9960ead78597f29c1a26c, nTime=1473090670, nBits=1e0ffff0, nNonce=3360782, vtx=1)
+        //   CTransaction(hash=d5b7d14d2d2a75d97ce9f199a5bbd3677535ba74f8a9960ead78597f29c1a26c, ver=1, vin.size=1, vout.size=1, nLockTime=0)
+        //     CTxIn(COutPoint(0000000000000000000000000000000000000000000000000000000000000000, 4294967295), coinbase 04ffff001d01044c4d4e592054696d65732033312f4d61792f32303136205a6f6fe2809973204b696c6c696e67206f6620476f72696c6c6120486f6c64696e67206120426f792050726f6d707473204f757472616765)
+        //     CTxOut(nValue=50.00000000, scriptPubKey=04aa26373c77c48a5160d06aa7a531)
+        //   vMerkleTree: d5b7d14d2d2a75d97ce9f199a5bbd3677535ba74f8a9960ead78597f29c1a26c
+
+
         // Genesis block
         const char* pszTimestamp = "NY Times 31/May/2016 Zoo’s Killing of Gorilla Holding a Boy Prompts Outrage";
         CTransaction txNew;
@@ -2814,8 +2827,8 @@ bool InitBlockIndex() {
 
         if (fTestNet)
         {
-            block.nTime    = 1472317588;
-            block.nNonce   = 480661;
+            block.nTime    = 1473090670;
+            block.nNonce   = 3360782;
         }
 
         //// debug print

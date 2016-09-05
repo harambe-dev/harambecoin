@@ -1,8 +1,6 @@
 Updates:
 --------
 - Source code updated to litecoin v0.8.x branch
-- Maturity currently set at 12 blocks, needs to be 120 (min) for real network
-- 1 billion coins max
 - uses boilerplate diff retarget and block rewards -> this needs major updates
 - DNS Seeds set to null; need to set up nodes for actual network
 - No genesis block created in this update for either network
@@ -10,3 +8,9 @@ Updates:
 - Quick fix for client version so wallet doesn't incorrectly attempt downgrade
 - Moved 'To Do' to a seperate file
 - Windows Test Client compiled and running correctly
+
+To Do:
+------
+- Reseed testnet and verify new coin distribution
+- Create test genesis block for mainnet to run tests
+- Change difficulty retarget algorithm
