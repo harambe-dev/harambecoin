@@ -1092,12 +1092,12 @@ int64 static GetBlockValue(int nHeight, int64 nFees)
 {
     // Harambecoin Block Value depreciation
     // this value is for testing only -> actual blocks per month = 29200
-    int nMonths = (nHeight / 100); // expected number of blocks per month
+    int nMonths = (nHeight / 10); // expected number of blocks per month
 
     // this calculates block reward truncated to two decimal points
-    double dParam = 4.5 - (nMonths * 0.01);
+    double dParam = 2.45 - (nMonths * 0.01);
     double dMultiplier = exp(dParam);
-    float fTruncatedMultiplier = floor(dMultiplier*100) / 100;
+    float fTruncatedMultiplier = (floor(dMultiplier*100)) / 100;
 
     int64 nSubsidy = fTruncatedMultiplier * COIN;
     return nSubsidy + nFees;
