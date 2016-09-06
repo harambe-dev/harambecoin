@@ -1097,7 +1097,7 @@ int64 static GetBlockValue(int nHeight, int64 nFees)
     // this calculates block reward truncated to two decimal points
     double dParam = 2.45 - (nMonths * 0.01);
     double dMultiplier = exp(dParam);
-    float fTruncatedMultiplier = (floor(dMultiplier*100)) / 100;
+    float fTruncatedMultiplier = floor(dMultiplier * 100) / 100);
 
     int64 nSubsidy = fTruncatedMultiplier * COIN;
     return nSubsidy + nFees;
