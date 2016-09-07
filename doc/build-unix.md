@@ -1,4 +1,5 @@
 Copyright (c) 2009-2013 Bitcoin Developers
+Copyright (c) 2016 Harambecoin Developers
 
 Distributed under the MIT/X11 software license, see the accompanying
 file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -45,71 +46,47 @@ Licenses of statically linked libraries:
  miniupnpc     New (3-clause) BSD license
 
 - Versions used in this release:
--  GCC           4.3.3
--  OpenSSL       1.0.1c
+-  GCC           4.8.4
+-  OpenSSL       1.0.1j
 -  Berkeley DB   4.8.30.NC
--  Boost         1.37
+-  Boost         1.55.0
 -  miniupnpc     1.6
 
 Dependency Build Instructions: Ubuntu & Debian
 ----------------------------------------------
-Build requirements:
+Build requirements for Ubuntu 12.04/14.04:
 
 	sudo apt-get install build-essential
 	sudo apt-get install libssl-dev
-
-for Ubuntu 12.04:
-
 	sudo apt-get install libboost-all-dev
 
- db4.8 packages are available [here](https://launchpad.net/~bitcoin/+archive/bitcoin).
+At this point, libdb5.1 has become more commonplace on most distributions and 
+therefore is the more likely choice, however, libdb4.8 can be used and will
+still compile and function correctly. Obviously the warning still stands that 
+switching between versions will break binary wallet compatability so be aware of
+this in the event that you switch versions and recompile at some point in the 
+future.
 
- Ubuntu precise has packages for libdb5.1-dev and libdb5.1++-dev,
- but using these will break binary wallet compatibility, and is not recommended.
+Either:
 
-for other Ubuntu & Debian:
+	sudo apt-get install libdb5.1-dev
+	sudo apt-get install libdb5.1++-dev
+	
+	or
 
 	sudo apt-get install libdb4.8-dev
 	sudo apt-get install libdb4.8++-dev
-	sudo apt-get install libboost1.37-dev
- (If using Boost 1.37, append -mt to the boost libraries in the makefile)
+		
+	db4.8 packages are available [here](https://launchpad.net/~bitcoin/+archive/bitcoin).
 
 Optional:
 
 	sudo apt-get install libminiupnpc-dev (see USE_UPNP compile flag)
 
-
 Notes
 -----
-The release is built with GCC and then "strip bitcoind" to strip the debug
+The release is built with GCC and then "strip harambecoind" to strip the debug
 symbols, which reduces the executable size by about 90%.
-
-
-miniupnpc
----------
-	tar -xzvf miniupnpc-1.6.tar.gz
-	cd miniupnpc-1.6
-	make
-	sudo su
-	make install
-
-
-Berkeley DB
------------
-You need Berkeley DB 4.8.  If you have to build Berkeley DB yourself:
-
-	../dist/configure --enable-cxx
-	make
-
-
-Boost
------
-If you need to build Boost yourself:
-
-	sudo su
-	./bootstrap.sh
-	./bjam install
-
 
 Security
 --------
@@ -131,7 +108,7 @@ exploit even if a vulnerability is found, you can take the following measures:
 
     To test that you have built PIE executable, install scanelf, part of paxutils, and use:
 
-    	scanelf -e ./harambecoin
+    	scanelf -e ./harambecoind
 
     The output should contain:
      TYPE

@@ -1,0 +1,155 @@
+*avgOf5 = *avgOf7 = *avgOf9 = *avgOf17 = 0;
+  if (pindexLast)
+    blocktime = pindexLast->GetBlockTime();
+  else blocktime = 0;
+
+  for (blockoffset = 0; blockoffset < 18; blockoffset++)
+  {
+    oldblocktime = blocktime;
+    if (pindexLast)
+    {
+      pindexLast = pindexLast->pprev;
+      blocktime = pindexLast->GetBlockTime();
+    }
+    else
+    { // genesis block or previous
+      blocktime -= nTargetSpacing;
+    }
+    // for each block, add interval.
+    if (blockoffset <= 5) *avgOf5 += (oldblocktime - blocktime);
+    if (blockoffset <= 7) *avgOf7 += (oldblocktime - blocktime);
+    if (blockoffset <= 9) *avgOf9 += (oldblocktime - blocktime);
+    *avgOf17 += (oldblocktime - blocktime);    
+  }
+  // now we have the sums of the block intervals. Division gets us the averages. 
+  *avgOf5 /= 5;
+  *avgOf7 /= 7;
+  *avgOf9 /= 9;
+  *avgOf17 /= 17;
+}
+
+
+
+// This is a novel getnextwork algorithm.  It responds quickly to huge changes in hashing power, is immune to time warp
+// attacks, and regulates the block rate to keep the block height close to the block height expected given the nominal
+// block interval and the elapsed time.  How close the correspondence between block height and wall clock time is
+// depends on how stable the hashing power has been.
+
+unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock)
+{
+    int64_t avgOf5;
+    int64_t avgOf9;
+    int64_t avgOf7;
+    int64_t avgOf17;
+    int64_t toofast;
+    int64_t tooslow;
+    int64_t difficultyfactor = 10000;
+    int64_t now;
+    int64_t BlockHeightTime;
+    int64_t nIntervalDesired;
+
+    unsigned int nProofOfWorkLimit = Params().ProofOfWorkLimit().GetCompact();
+
+    if (pindexLast == NULL)
+        // Genesis Block
+        return nProofOfWorkLimit;
+
+    
+    if (TestNet())
+    {
+        // Special difficulty rule for testnet: If the new block's timestamp is more than 2* 10 minutes then allow
+        // mining of a min-difficulty block.
+        if (pblock->nTime > pindexLast->nTime + nTargetSpacing*2)
+           return nProofOfWorkLimit;
+        else
+        {
+            // Return the last non-special-min-difficulty-rules-block
+           const CBlockIndex* pindex = pindexLast;
+           while (pindex->pprev && pindex->nHeight % nInterval != 0 && pindex->nBits == nProofOfWorkLimit)
+               pindex = pindex->pprev;
+           return pindex->nBits;
+        }
+    }
+
+    // Regulate block times so as to remain synchronized in the long run with the actual time.  The first step is to
+    // calculate what interval we want to use as our regulatory goal.  It depends on how far ahead of (or behind)
+    // schedule we are.  If we're more than a day ahead or behind, we use the maximum (nSlowInterval) or minimum
+    // (nFastInterval) values; otherwise we calculate a weighted average somewhere in between them.  The closer we are
+    // to being exactly on schedule the closer our selected interval will be to our nominal interval (nTargetSpacing).
+
+    now = pindexLast->GetBlockTime();
+    BlockHeightTime = nTimeZero + pindexLast->nHeight * nTargetSpacing;
+    
+    if (now < BlockHeightTime + 86400 && now > BlockHeightTime )  // ahead of schedule by less than a day. 
+      nIntervalDesired = ((86400 - (now - BlockHeightTime)) * nTargetSpacing +  
+			 (now - BlockHeightTime) * nFastInterval) / 86400;
+    else if (now + 86400 > BlockHeightTime && now < BlockHeightTime)  // behind schedule by less than a day. 
+      nIntervalDesired = ((86400 - (BlockHeightTime - now)) * nTargetSpacing + 
+			 (BlockHeightTime - now) * nSlowInterval) / 86400;
+    else if (now < BlockHeightTime) nIntervalDesired = nSlowInterval; // ahead by more than a day.
+    else  nIntervalDesired = nFastInterval; // behind by more than a day. 
+    
+    // find out what average intervals over last 5, 7, 9, and 17 blocks have been. 
+    avgRecentTimestamps(pindexLast, &avgOf5, &avgOf7, &avgOf9, &avgOf17);    
+
+
+
+    // check for emergency adjustments. These are to bring the diff up or down FAST when a burst miner or multipool
+    // jumps on or off.  Once they kick in they can adjust difficulty by a factor of nine or ten every ten blocks, and
+    // they can kick in very rapidly after massive hash power jumps on or off.  The emergency speed-up adjustment uses
+    // shorter intervals for quicker reaction times measured in blocks - which when it's needed will be longer in
+    // minutes.
+
+    toofast = (nIntervalDesired * 3) / 4;
+    tooslow = (nIntervalDesired * 4) / 3;    
+
+    if (avgOf7 < toofast && avgOf9 < toofast && avgOf17 < toofast)
+    {  //emergency adjustment, slow down
+      difficultyfactor *= 5;
+      difficultyfactor /= 4;
+    }
+    else if (avgOf5 > tooslow && avgOf7 > tooslow && avgOf9 > tooslow)
+    {  //emergency adjustment, speed up
+      difficultyfactor *= 4;
+      difficultyfactor /= 5;
+    }
+
+    // If no emergency adjustment, check for normal adjustment. 
+    else if ((avgOf7 > nIntervalDesired && avgOf9 > nIntervalDesired && avgOf17 > nIntervalDesired) ||
+	     (avgOf7 < nIntervalDesired && avgOf9 < nIntervalDesired && avgOf17 < nIntervalDesired))
+    { // 3 averages too high or 3 too low.  Doesn't matter which. This will be executed occasionally on the basis of
+      // random variation, even if the settings are perfect. It regulates one-fifth of the way to the calculated point.
+      difficultyfactor *= (5 * nIntervalDesired);
+      difficultyfactor /= (avgOf17 + (4 * nIntervalDesired));
+    }
+
+    // limit to doubling or halving.... though I'm pretty sure there are no realistic conditions where this will make a
+    // difference.
+    if (difficultyfactor > 20000) difficultyfactor = 20000;
+    if (difficultyfactor < 5000) difficultyfactor = 5000;
+
+    uint256 bnNew;
+    uint256 bnOld;
+
+    bnOld.SetCompact(pindexLast->nBits);
+
+    if (difficultyfactor == 10000) // no adjustment
+      return(bnOld.GetCompact());
+
+    bnNew = bnOld * 10000; 
+    bnNew /= difficultyfactor;
+
+    if (bnNew > Params().ProofOfWorkLimit())
+      bnNew = Params().ProofOfWorkLimit();
+
+    LogPrintf("GetNextWorkRequired RETARGET\n");
+    LogPrintf("Actual time %d, Scheduled time for this block height = %d\n", now, BlockHeightTime );
+    LogPrintf("Nominal block interval = %d, regulating on interval %d to get back to schedule.\n", 
+	      nTargetSpacing, nIntervalDesired );
+    LogPrintf("Avg intervals of last 5/9/17 blocks = %d / %d / %d.\n", nTargetSpacing, avgOf5, avgOf9, avgOf17);
+    LogPrintf("Difficulty Before Adjustment: %08x  %s\n", pindexLast->nBits, bnOld.ToString());
+    LogPrintf("Difficulty After Adjustment:  %08x  %s\n", bnNew.GetCompact(), bnNew.ToString());
+
+    return bnNew.GetCompact();
+}
+
