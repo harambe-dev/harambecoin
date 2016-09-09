@@ -1133,6 +1133,7 @@ unsigned int ComputeMinWork(unsigned int nBase, int64 nTime)
     return bnResult.GetCompact();
 }
 
+// Modified version of DarkGravityWave v3, written by Evan Duffield
 unsigned int static GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock)
 {
     const CBlockIndex *BlockLastSolved = pindexLast;
@@ -1141,8 +1142,8 @@ unsigned int static GetNextWorkRequired(const CBlockIndex* pindexLast, const CBl
     BlockCreating = BlockCreating;
     int64 nActualTimespan = 0;
     int64 LastBlockTime = 0;
-    int64 PastBlocksMin = 24;
-    int64 PastBlocksMax = 24;
+    int64 PastBlocksMin = 12;
+    int64 PastBlocksMax = 12;
     int64 CountBlocks = 0;
     CBigNum PastDifficultyAverage;
     CBigNum PastDifficultyAveragePrev;
