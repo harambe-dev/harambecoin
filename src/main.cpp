@@ -38,8 +38,8 @@ CTxMemPool mempool;
 unsigned int nTransactionsUpdated = 0;
 
 map<uint256, CBlockIndex*> mapBlockIndex;
-uint256 hashGenesisBlock("0x");
-static CBigNum bnProofOfWorkLimit(~uint256(0) >> 20); // what does changing this affect? Numeric represenation of difficulty?
+uint256 hashGenesisBlock("0x51f94c6d762b19a0f8a930a0ae745035e2cf61faca8255f2143a83521b5cef04");
+static CBigNum bnProofOfWorkLimit(~uint256(0) >> 20);
 CBlockIndex* pindexGenesisBlock = NULL;
 int nBestHeight = -1;
 uint256 nBestChainWork = 0;
@@ -1091,8 +1091,7 @@ uint256 static GetOrphanRoot(const CBlockHeader* pblock)
 int64 static GetBlockValue(int nHeight, int64 nFees)
 {
     // Harambecoin Block Value depreciation
-    // this value is for testing only -> actual blocks per month = 29200
-    int nMonths = (nHeight / 10); // expected number of blocks per month
+    int nMonths = (nHeight / 29200); // expected number of blocks per month
 
     // this calculates block reward truncated to two decimal points
     double dParam = 2.45 - (nMonths * 0.01);
@@ -1103,9 +1102,8 @@ int64 static GetBlockValue(int nHeight, int64 nFees)
     return nSubsidy + nFees;
 }
 
-// for testing purposes we'll use a 6 minute, 4 block simple retarget period
-static const int64 nTargetTimespan = 4 * 1.5 * 60;
 static const int64 nTargetSpacing = 1.5 * 60; // Harambecoin: 90 second blocks
+static const int64 nTargetTimespan = 4 * 1.5 * 60;
 static const int64 nInterval = nTargetTimespan / nTargetSpacing;
 
 //
@@ -2824,8 +2822,8 @@ bool InitBlockIndex() {
         txNew.vin.resize(1);
         txNew.vout.resize(1);
         txNew.vin[0].scriptSig = CScript() << 486604799 << CBigNum(4) << vector<unsigned char>((const unsigned char*)pszTimestamp, (const unsigned char*)pszTimestamp + strlen(pszTimestamp));
-        txNew.vout[0].nValue = 50 * COIN;
-        txNew.vout[0].scriptPubKey = CScript() << ParseHex("04aa26373c77c48a5160d06aa7a531dea069fcda8f8c3a587e7f95d799efbe764883b7022521b5a2b177caacc264581c9ec121b77a4fa939116e6c1417d41c5f45") << OP_CHECKSIG;
+        txNew.vout[0].nValue = 0;
+        txNew.vout[0].scriptPubKey = CScript() << 0x0 << OP_CHECKSIG;
         CBlock block;
         block.vtx.push_back(txNew);
         block.hashPrevBlock = 0;
@@ -2833,7 +2831,7 @@ bool InitBlockIndex() {
         block.nVersion = 1;
         block.nTime    = 1472317588;
         block.nBits    = 0x1e0ffff0;
-        block.nNonce   = 0;
+        block.nNonce   = 2270405;
 
         if (fTestNet)
         {
@@ -2846,7 +2844,7 @@ bool InitBlockIndex() {
         printf("%s\n", hash.ToString().c_str());
         printf("%s\n", hashGenesisBlock.ToString().c_str());
         printf("%s\n", block.hashMerkleRoot.ToString().c_str());
-        assert(block.hashMerkleRoot == uint256("0xd5b7d14d2d2a75d97ce9f199a5bbd3677535ba74f8a9960ead78597f29c1a26c"));
+        assert(block.hashMerkleRoot == uint256("0x5eca486d63447054d21d715fc3cfa1b08dbfb42ffdabad01907b7c0285850e6a"));
 
         // If genesis block hash does not match, then generate new genesis hash.
         if (false && block.GetHash() != hashGenesisBlock)
@@ -3146,16 +3144,11 @@ bool static AlreadyHave(const CInv& inv)
 }
 
 
-
-
 // The message start string is designed to be unlikely to occur in normal data.
 // The characters are rarely used upper ASCII, not valid as UTF-8, and produce
 // a large 4-byte int at any alignment.
 
-unsigned char pchMessageStart[4] = { 0xf9, 0xda, 0xb4, 0xd9 }; 
-// Harambecoin: just picked some random ass numbers
-// -> for the moment testnet and mainnet are using same pchMessageStart
-
+unsigned char pchMessageStart[4] = { 0xf7, 0xd8, 0xb2, 0xd7 };
 
 void static ProcessGetData(CNode* pfrom)
 {
