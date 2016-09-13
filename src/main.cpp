@@ -1101,9 +1101,8 @@ int64 static GetBlockValue(int nHeight, int64 nFees)
     double dParam = 2.45 - (nMonths * 0.01);
     double dMultiplier = exp(dParam);
     int nTruncatedMultiplier = floor(dMultiplier * 100); //not sure that floor is really neccesary here
-    int nCoinMultiplier = nTruncatedMultiplier / 100;
 
-    int64 nSubsidy = nCoinMultiplier * COIN;
+    int64 nSubsidy = nTruncatedMultiplier * COIN / 100;
     return nSubsidy + nFees;
 }
 
