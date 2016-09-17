@@ -8,8 +8,13 @@ More details to come soon.
 Initial Specifications:
 -----------------------
 Algo: Scrypt
-Max Coins: ~2.5 billion
-	Exponential decay curve with monthly reduction *in testing*
+
+Coin Supply: 
+	- 17 million coins over 17 years
+	- ~20 million coins total
+	- Block Reward = e^(2.5 - floor(height/29200) * 0.01) *truncated to two decimals*
+	
+Difficulty Adjustment: DGW3 (slighly modified)
 
 
 

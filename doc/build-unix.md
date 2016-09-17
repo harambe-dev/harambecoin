@@ -31,7 +31,7 @@ Dependencies
 http://miniupnp.tuxfamily.org/files/).  UPnP support is compiled in and
 turned off by default.  Set USE_UPNP to a different value to control this:
 
-	USE_UPNP=     No UPnP support miniupnp not required
+	USE_UPNP=-    No UPnP support miniupnp not required
 	USE_UPNP=0    (the default) UPnP support turned off by default at runtime
 	USE_UPNP=1    UPnP support turned on by default at runtime
 
@@ -54,11 +54,9 @@ Licenses of statically linked libraries:
 
 Dependency Build Instructions: Ubuntu & Debian
 ----------------------------------------------
-Build requirements for Ubuntu 12.04/14.04:
+Build requirements (Tested on Ubuntu 12.04/14.04 & Debian 7):
 
-	sudo apt-get install build-essential
-	sudo apt-get install libssl-dev
-	sudo apt-get install libboost-all-dev
+	sudo apt-get install build-essential libssl-dev libboost-all-dev
 
 At this point, libdb5.1 has become more commonplace on most distributions and 
 therefore is the more likely choice, however, libdb4.8 can be used and will
@@ -69,13 +67,11 @@ future.
 
 Either:
 
-	sudo apt-get install libdb5.1-dev
-	sudo apt-get install libdb5.1++-dev
+	sudo apt-get install libdb5.1-dev libdb5.1++-dev
 	
 	or
 
-	sudo apt-get install libdb4.8-dev
-	sudo apt-get install libdb4.8++-dev
+	sudo apt-get install libdb4.8-dev libdb4.8++-dev
 		
 	db4.8 packages are available [here](https://launchpad.net/~bitcoin/+archive/bitcoin).
 
