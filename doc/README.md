@@ -1,5 +1,5 @@
-Harambecoin 0.8.x ALPHA
-=======================
+Harambecoin 1.0.0.2 Beta
+========================
 
 Copyright (c) 2009-2014 Bitcoin Developers
 Copyright (c) 2011-2015 Litecoin Developers

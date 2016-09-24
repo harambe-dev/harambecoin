@@ -38,7 +38,7 @@ CTxMemPool mempool;
 unsigned int nTransactionsUpdated = 0;
 
 map<uint256, CBlockIndex*> mapBlockIndex;
-uint256 hashGenesisBlock("0xb769a66543e67438b3440d8884a50cb6cc085ba70631bb4d47a1b5029a5eb0e0");
+uint256 hashGenesisBlock("0x59e32f1ba2fe0625099198bd1b5fbb10a3a8d4c2bb9be8fd9f298575e90b9c7c");
 static CBigNum bnProofOfWorkLimit(~uint256(0) >> 20);
 CBlockIndex* pindexGenesisBlock = NULL;
 int nBestHeight = -1;
@@ -1094,12 +1094,12 @@ int64 static GetBlockValue(int nHeight, int64 nFees)
     int nMonths = (nHeight / 29200); // expected number of blocks per month
 
     // this calculates block reward truncated to two decimal points
-    double dParam = 2.45 - (nMonths * 0.01);
+    double dParam = 2.6 - (nMonths * 0.018);
     double dMultiplier = exp(dParam);
     int nTruncatedMultiplier = floor(dMultiplier * 100); //not sure that floor is really neccesary here
 
     if (nHeight == 1)
-        nTruncatedMultiplier = 10000 * 100; // premine for bounties
+        nTruncatedMultiplier = 100000 * 100; // premine for bounties
 
     int64 nSubsidy = nTruncatedMultiplier * COIN / 100;
     return nSubsidy + nFees;
@@ -2792,11 +2792,12 @@ bool InitBlockIndex() {
     // Only add the genesis block if not reindexing (in which case we reuse the one already on disk)
     if (!fReindex) {
         // Harambecoin Genesis Block:
-        // CBlock(hash=b769a66543e67438b3440d8884a50cb6cc085ba70631bb4d47a1b5029a5eb0e0, input=010000000000000000000000000000000000000000000000000000000000000000000000fa5570c35abfa6c85f5a38f363d23e7297b75518d79af8de80f3eb4c1678c8c61940db57f0ff0f1eaee80700, PoW=000009cded1d82f5d7b6ca252393ddfb9cfd3ca36abee4b67ef53b8ba31c2852, ver=1, hashPrevBlock=0000000000000000000000000000000000000000000000000000000000000000, hashMerkleRoot=c6c878164cebf380def89ad71855b797723ed263f3385a5fc8a6bf5ac37055fa, nTime=1473986585, nBits=1e0ffff0, nNonce=518318, vtx=1)
+        // CBlock(hash=59e32f1ba2fe0625099198bd1b5fbb10a3a8d4c2bb9be8fd9f298575e90b9c7c, input=010000000000000000000000000000000000000000000000000000000000000000000000fa5570c35abfa6c85f5a38f363d23e7297b75518d79af8de80f3eb4c1678c8c64ca7e657f0ff0f1e556a0f00, PoW=000002a60adac2281b3a26383bf9d0f2ecbb7270317993b6d68f890de6c0c3cc, ver=1, hashPrevBlock=0000000000000000000000000000000000000000000000000000000000000000, hashMerkleRoot=c6c878164cebf380def89ad71855b797723ed263f3385a5fc8a6bf5ac37055fa, nTime=1474733900, nBits=1e0ffff0, nNonce=1010261, vtx=1)
         // CTransaction(hash=c6c878164cebf380def89ad71855b797723ed263f3385a5fc8a6bf5ac37055fa, ver=1, vin.size=1, vout.size=1, nLockTime=0)
         //   CTxIn(COutPoint(0000000000000000000000000000000000000000000000000000000000000000, 4294967295), coinbase 04ffff001d01044c4d4e592054696d65732033312f4d61792f32303136205a6f6fe2809973204b696c6c696e67206f6620476f72696c6c6120486f6c64696e67206120426f792050726f6d707473204f757472616765)
         //   CTxOut(nValue=0.00000000, scriptPubKey=0441ca38dbf53fdfdec397ed1ccf69)
         // vMerkleTree: c6c878164cebf380def89ad71855b797723ed263f3385a5fc8a6bf5ac37055fa
+
 
         // Testnet Genesis Block:
         // CBlock(hash=c35f0dddb80479c9ed48a3889b46b55d5fa4fed3a808b4002402849cfc269b3e, input=010000000000000000000000000000000000000000000000000000000000000000000000fa5570c35abfa6c85f5a38f363d23e7297b75518d79af8de80f3eb4c1678c8c6b759d757f0ff0f1e50960000, PoW=000005c872da1a24179441b97d7329da4617a2963abd7d90c33c18e2ca6a8a2c, ver=1, hashPrevBlock=0000000000000000000000000000000000000000000000000000000000000000, hashMerkleRoot=c6c878164cebf380def89ad71855b797723ed263f3385a5fc8a6bf5ac37055fa, nTime=1473730999, nBits=1e0ffff0, nNonce=38480, vtx=1)
@@ -2818,9 +2819,9 @@ bool InitBlockIndex() {
         block.hashPrevBlock = 0;
         block.hashMerkleRoot = block.BuildMerkleTree();
         block.nVersion = 1;
-        block.nTime    = 1473986585;
+        block.nTime    = 1474733900;
         block.nBits    = 0x1e0ffff0;
-        block.nNonce   = 518318;
+        block.nNonce   = 1010261;
 
         if (fTestNet)
         {
