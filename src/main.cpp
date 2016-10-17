@@ -1096,7 +1096,7 @@ int64 static GetBlockValue(int nHeight, int64 nFees)
     // this calculates block reward truncated to two decimal points
     double dParam = 2.6 - (nMonths * 0.018);
     double dMultiplier = exp(dParam);
-    int nTruncatedMultiplier = floor(dMultiplier * 100); //not sure that floor is really neccesary here
+    int nTruncatedMultiplier = floor(dMultiplier * 100);
 
     if (nHeight == 1)
         nTruncatedMultiplier = 100000 * 100; // premine for bounties
