@@ -41,10 +41,10 @@ namespace Checkpoints
         ;
     static const CCheckpointData data = {
         &mapCheckpoints,
-        1476455803,, // * UNIX timestamp of last checkpoint block
-        16146,    // * total number of transactions between genesis and last checkpoint
+        1476455803,   // * UNIX timestamp of last checkpoint block
+        16146,   // * total number of transactions between genesis and last checkpoint
                          //   (the tx=... number in the SetBestChain debug.log lines)
-        1500    // * estimated number of transactions per day after checkpoint
+        1500  // * estimated number of transactions per day after checkpoint
     };
 
     static MapCheckpoints mapCheckpointsTestnet =
