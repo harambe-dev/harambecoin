@@ -1,3 +1,5 @@
+*DEPRECIATED*
+
 Multiwallet Qt Development and Integration Strategy
 ===================================================
 
