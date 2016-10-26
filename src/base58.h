@@ -273,7 +273,7 @@ public:
     enum
     {
         PUBKEY_ADDRESS = 40, // Harambecoin addresses start with H
-        SCRIPT_ADDRESS = 5,
+        SCRIPT_ADDRESS = 50,
         PUBKEY_ADDRESS_TEST = 100, // Testnet addresses start with h
         SCRIPT_ADDRESS_TEST = 196,
     };
